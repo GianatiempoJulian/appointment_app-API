@@ -7,59 +7,38 @@ use Illuminate\Http\Request;
 
 class SpecialityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $specialities = Speciality::all();
+        return response()->json($specialities);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function store(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string'
+        ]);
+        $speciality = Speciality::create($validated);
+        return response()->json(['msg' => 'Speciality created successfully', 'Speciality' => $speciality], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function show($id) {
+        $speciality = Speciality::find($id);
+        if($speciality){
+            return response()->json(['Speciality' => $speciality]); 
+        }else{
+            return response()->json(['msg' => 'Speciality not found'],404); 
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Speciality $speciality)
-    {
-        //
+    public function update(Request $request, Speciality $speciality) {
+        $validated = $request->validate([
+            'name' => 'required|string'
+        ]);
+        Speciality::find($speciality->id)->update($validated);
+        return response()->json(['msg' => 'Speciality updated successfully', 'Speciality' => $speciality], 201);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Speciality $speciality)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Speciality $speciality)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Speciality $speciality)
-    {
-        //
+    public function destroy(Speciality $speciality) {
+        $speciality->delete();
+        return response()->json(['msg' => 'Speciality deleted successfully'], 204);
     }
 }

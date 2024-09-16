@@ -7,59 +7,46 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $appointments = Appointment::with(['customer','employee','servicie'])->get();
+        return response()->json($appointments);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function store(Request $request) {
+        $validated = $request->validate([
+            'customer_id' => 'required|integer',
+            'employee_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'date_time' => 'required|string',
+            'status' => 'required|string'
+        ]);
+        $appointment = Appointment::create($validated);
+        return response()->json(['msg' => 'Appointment created successfully', 'Appointment' => $appointment], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function show($id) {
+        $appointment = Appointment::find($id);
+        if($appointment){
+            return response()->json(['Appointment' => $appointment]); 
+        }else{
+            return response()->json(['msg' => 'Appointment not found'],404); 
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Appointment $appointment)
-    {
-        //
+    public function update(Request $request, Appointment $appointment) {
+        $validated = $request->validate([
+           'customer_id' => 'required|integer',
+            'employee_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'date_time' => 'required|string',
+            'status' => 'required|string'
+        ]);
+        Appointment::find($appointment->id)->update($validated);
+        return response()->json(['msg' => 'Appointment updated successfully', 'Appointment' => $appointment], 201);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Appointment $appointment)
-    {
-        //
+    public function destroy(Appointment $appointment) {
+        $appointment->delete();
+        return response()->json(['msg' => 'Appointment deleted successfully'], 204);
     }
 }
