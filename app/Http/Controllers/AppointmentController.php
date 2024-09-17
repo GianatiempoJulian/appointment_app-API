@@ -24,10 +24,10 @@ class AppointmentController extends Controller
         return response()->json(['msg' => 'Appointment created successfully', 'Appointment' => $appointment], 201);
     }
 
-    public function show($id) {
-        $appointment = Appointment::find($id);
-        if($appointment){
-            return response()->json(['Appointment' => $appointment]); 
+    public function show(Appointment $appointment) {
+        $appointmentFinded = Appointment::with(['customer', 'employee', 'servicie'])->find($appointment->id);
+        if($appointmentFinded){
+            return response()->json(['Appointment' => $appointmentFinded]); 
         }else{
             return response()->json(['msg' => 'Appointment not found'],404); 
         }
