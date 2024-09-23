@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AppointmentController extends Controller
 {
     public function index() {
-        $appointments = Appointment::with(['customer','employee','servicie'])->get();
+        $appointments = Appointment::with(['customer','employee','servicie', 'status'])->get();
         return response()->json($appointments);
     }
 
@@ -17,8 +17,9 @@ class AppointmentController extends Controller
             'customer_id' => 'required|integer',
             'employee_id' => 'required|integer',
             'service_id' => 'required|integer',
-            'date_time' => 'required|string',
-            'status' => 'required|string'
+            'status_id' => 'required|integer',
+            'date' => 'required',
+            'time' => 'required'
         ]);
         $appointment = Appointment::create($validated);
         return response()->json(['msg' => 'Appointment created successfully', 'Appointment' => $appointment], 201);
@@ -35,14 +36,12 @@ class AppointmentController extends Controller
 
     public function update(Request $request, Appointment $appointment) {
         $validated = $request->validate([
-           'customer_id' => 'required|integer',
-            'employee_id' => 'required|integer',
-            'service_id' => 'required|integer',
-            'date_time' => 'required|string',
-            'status' => 'required|string'
+            'employee_id' => 'integer',
+            'service_id' => 'integer',
+            'status_id' => 'integer'
         ]);
         Appointment::find($appointment->id)->update($validated);
-        return response()->json(['msg' => 'Appointment updated successfully', 'Appointment' => $appointment], 201);
+        return response()->json(['msg' => 'Appointment updated successfully', 'Appointment' => $appointment], 200);
     }
 
     public function destroy(Appointment $appointment) {

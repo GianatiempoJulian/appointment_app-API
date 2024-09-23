@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Appointment extends Model
 {
     use HasFactory;
-    protected $fillable = ['customer_id','employee_id','service_id','date_time','status'];
+    protected $fillable = ['customer_id','employee_id','service_id','date', 'time', 'status_id'];
 
     public function customer(): BelongsTo
     {
@@ -24,6 +24,11 @@ class Appointment extends Model
     public function servicie(): BelongsTo
     {
         return $this->belongsTo(Servicie::class, 'service_id');
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
 }
