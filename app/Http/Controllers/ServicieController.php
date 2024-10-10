@@ -16,6 +16,7 @@ class ServicieController extends Controller
         $validated = $request->validate([
             'name' => 'required|string',
             'duration' => 'required|integer',
+            'typeServicie_id' => 'required|integer',
             'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/'
         ]);
         $servicie = Servicie::create($validated);

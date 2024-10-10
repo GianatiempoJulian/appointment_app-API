@@ -7,59 +7,38 @@ use Illuminate\Http\Request;
 
 class StatusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $status = Status::all();
+        return response()->json($status);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function store(Request $request) {
+        $validated = $request->validate([
+            'description' => 'required|string'
+        ]);
+        $status = Status::create($validated);
+        return response()->json(['msg' => 'Status created successfully', 'Status' => $status], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function show($id) {
+        $status = Status::find($id);
+        if($status){
+            return response()->json(['Status' => $status]); 
+        }else{
+            return response()->json(['msg' => 'Status not found'],404); 
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Status $status)
-    {
-        //
+    public function update(Request $request, Status $status) {
+        $validated = $request->validate([
+            'description' => 'required|string'
+        ]);
+        Status::find($status->id)->update($validated);
+        return response()->json(['msg' => 'Status updated successfully', 'Status' => $status], 201);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Status $status)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Status $status)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Status $status)
-    {
-        //
+    public function destroy(Status $status) {
+        $status->delete();
+        return response()->json(['msg' => 'Status deleted successfully'], 204);
     }
 }

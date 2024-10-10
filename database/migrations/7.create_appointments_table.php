@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees');
             $table->foreignId('service_id')->constrained('servicies');
             $table->foreignId('status_id')->constrained('statuses');
+            $table->foreignId('place_id')->constrained('places');
             $table->date('date');
             $table->time('time');
             $table->timestamps();
