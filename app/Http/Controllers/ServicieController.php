@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ServicieController extends Controller
 {
     public function index() {
-        $servicies = Servicie::all();
+        $servicies = Servicie::with(['typeServicie'])->get();
         return response()->json($servicies);
     }
 

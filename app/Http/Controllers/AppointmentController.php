@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AppointmentController extends Controller
 {
     public function index() {
-        $appointments = Appointment::with(['customer','employee','servicie','place', 'status'])->get();
+        $appointments = Appointment::with(['customer','employee','servicie.typeServicie','place', 'status'])->get();
         return response()->json($appointments);
     }
 
