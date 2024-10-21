@@ -27,7 +27,7 @@ class AppointmentController extends Controller
     }
 
     public function show(Appointment $appointment) {
-        $appointmentFinded = Appointment::with(['customer', 'employee', 'servicie', 'place'])->find($appointment->id);
+        $appointmentFinded = Appointment::with(['customer', 'employee', 'servicie.typeServicie', 'place'])->find($appointment->id);
         if($appointmentFinded){
             return response()->json(['Appointment' => $appointmentFinded]); 
         }else{
