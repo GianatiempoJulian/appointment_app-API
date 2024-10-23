@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -37,10 +38,11 @@ class AppointmentController extends Controller
 
     public function update(Request $request, Appointment $appointment) {
         $validated = $request->validate([
-            'employee_id' => 'integer',
-            'service_id' => 'integer',
-            'status_id' => 'integer',
-            'place_id' => 'integer'
+            'employee_id' => 'integer|nullable',
+            'service_id' => 'integer|nullable',
+            'status_id' => 'integer|nullable',
+            'place_id' => 'integer|nullable',
+            'customer_id' => 'integer|nullable',  
         ]);
         Appointment::find($appointment->id)->update($validated);
         return response()->json(['msg' => 'Appointment updated successfully', 'Appointment' => $appointment], 200);
@@ -49,5 +51,24 @@ class AppointmentController extends Controller
     public function destroy(Appointment $appointment) {
         $appointment->delete();
         return response()->json(['msg' => 'Appointment deleted successfully'], 204);
+    }
+
+    public function getAppointmentsFromCustomer($customerId) {
+        $customer = Customer::find($customerId);
+        $appointmentsFromCustomer = $customer->appointments()->with(['customer', 'employee', 'servicie.typeServicie', 'place', 'status'])->get();
+        if($appointmentsFromCustomer){
+            return response()->json(['appointmentsFromCustomer' => $appointmentsFromCustomer], 200); 
+        }else{
+            return response()->json(['msg' => 'Appointments from customer not found'],404); 
+        }
+    }
+
+    public function getAppointmentsAvailable() {
+        $appointmentsAvailables = Appointment::with(['customer', 'employee', 'servicie.typeServicie', 'place', 'status'])->where('status_id', 1)->get();
+        if($appointmentsAvailables){
+            return response()->json(['appointmentsAvailables' => $appointmentsAvailables], 200); 
+        }else{
+            return response()->json(['msg' => 'Appointments availables not found'],404); 
+        }
     }
 }
