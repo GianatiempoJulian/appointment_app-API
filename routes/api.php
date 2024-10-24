@@ -74,12 +74,13 @@ Route::delete('/servicies/{servicie}', [ServicieController::class, 'destroy']);
 
 //*====  APPOINTMENT ROUTES  ====*//
 Route::get('/appointments', [AppointmentController::class, 'index']); 
+Route::get('/appointments/availables', [AppointmentController::class, 'getAvailables']);
 Route::get('/appointments/{appointment}', [AppointmentController::class, 'show']);  
-Route::get('/appointments/availables', [AppointmentController::class, 'getAppointmentsAvailable']); 
 
 Route::post('/appointments', [AppointmentController::class, 'store']); 
 Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']); 
 Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']); 
+
 
 Route::get('/customer/{customer}/appointments', [AppointmentController::class, 'getAppointmentsFromCustomer']);
 

@@ -63,12 +63,12 @@ class AppointmentController extends Controller
         }
     }
 
-    public function getAppointmentsAvailable() {
-        $appointmentsAvailables = Appointment::with(['customer', 'employee', 'servicie.typeServicie', 'place', 'status'])->where('status_id', 1)->get();
-        if($appointmentsAvailables){
-            return response()->json(['appointmentsAvailables' => $appointmentsAvailables], 200); 
+    public function getAvailables(){
+        $availables = Appointment::with(['customer','employee','servicie.typeServicie','place', 'status'])->where('status_id', 1)->get();
+        if($availables){
+            return response()->json(['available' => $availables], 200);
         }else{
-            return response()->json(['msg' => 'Appointments availables not found'],404); 
+            return response()->json(['msg' => 'Availables not found'], 404);
         }
     }
 }
