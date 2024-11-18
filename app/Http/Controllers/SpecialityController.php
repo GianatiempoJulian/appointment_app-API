@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Speciality;
-use Illuminate\Http\Request;
+use App\Http\Requests\Speciality\StoreSpecialityRequest;
 
 class SpecialityController extends Controller
 {
@@ -12,28 +12,18 @@ class SpecialityController extends Controller
         return response()->json($specialities);
     }
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string'
-        ]);
-        $speciality = Speciality::create($validated);
+    public function store(StoreSpecialityRequest $request) {
+        $speciality = Speciality::create($request->validated());
         return response()->json(['msg' => 'Speciality created successfully', 'Speciality' => $speciality], 201);
     }
 
     public function show($id) {
         $speciality = Speciality::find($id);
-        if($speciality){
-            return response()->json(['Speciality' => $speciality]); 
-        }else{
-            return response()->json(['msg' => 'Speciality not found'],404); 
-        }
+        return $speciality ? response()->json(['Speciality' => $speciality]) : response()->json(['msg' => 'Speciality not found'], 404);
     }
 
-    public function update(Request $request, Speciality $speciality) {
-        $validated = $request->validate([
-            'name' => 'required|string'
-        ]);
-        Speciality::find($speciality->id)->update($validated);
+    public function update(StoreSpecialityRequest $request, Speciality $speciality) {
+        Speciality::find($speciality->id)->update($request->validated());
         return response()->json(['msg' => 'Speciality updated successfully', 'Speciality' => $speciality], 201);
     }
 

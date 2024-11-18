@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TypeServicie;
-use Illuminate\Http\Request;
+use App\Http\Requests\TypeServicie\StoreTypeServicieRequest;
 
 class TypeServicieController extends Controller
 {
@@ -12,28 +12,18 @@ class TypeServicieController extends Controller
         return response()->json($typesServicie);
     }
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string'
-        ]);
-        $typeServicie = TypeServicie::create($validated);
+    public function store(StoreTypeServicieRequest $request) {
+        $typeServicie = TypeServicie::create($request->validated());
         return response()->json(['msg' => 'Type servicie created successfully', 'Type Servicie' => $typeServicie], 201);
     }
 
     public function show($id) {
         $typeServicie = TypeServicie::find($id);
-        if($typeServicie){
-            return response()->json(['Type Servicie' => $typeServicie]); 
-        }else{
-            return response()->json(['msg' => 'Type servicie not found'],404); 
-        }
+        return $typeServicie ? response()->json(['Type Servicie' => $typeServicie]) : response()->json(['msg' => 'Type Servicie not found'], 404);
     }
 
-    public function update(Request $request, TypeServicie $typeServicie) {
-        $validated = $request->validate([
-            'name' => 'required|string'
-        ]);
-        TypeServicie::find($typeServicie->id)->update($validated);
+    public function update(StoreTypeServicieRequest $request, TypeServicie $typeServicie) {
+        TypeServicie::find($typeServicie->id)->update($request->validated());
         return response()->json(['msg' => 'Type servicie updated successfully', 'Type Servicie' => $typeServicie], 201);
     }
 

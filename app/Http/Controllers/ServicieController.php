@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servicie;
-use Illuminate\Http\Request;
+use App\Http\Requests\Servicie\StoreServicieRequest;
+use App\Http\Requests\Servicie\UpdateServicieRequest;
 
 class ServicieController extends Controller
 {
@@ -12,33 +13,18 @@ class ServicieController extends Controller
         return response()->json($servicies);
     }
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'duration' => 'required|integer',
-            'typeServicie_id' => 'required|integer',
-            'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/'
-        ]);
-        $servicie = Servicie::create($validated);
+    public function store(StoreServicieRequest $request) {
+        $servicie = Servicie::create($request->validated());
         return response()->json(['msg' => 'Servicie created successfully', 'Servicie' => $servicie], 201);
     }
 
     public function show($id) {
         $servicie = Servicie::find($id);
-        if($servicie){
-            return response()->json(['Servicie' => $servicie]); 
-        }else{
-            return response()->json(['msg' => 'Servicie not found'],404); 
-        }
+        return $servicie ? response()->json(['Servicie' => $servicie]) : response()->json(['msg' => 'Servicie not found'], 404);
     }
 
-    public function update(Request $request, Servicie $servicie) {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'duration' => 'required|integer',
-            'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/'
-        ]);
-        Servicie::find($servicie->id)->update($validated);
+    public function update(UpdateServicieRequest $request, Servicie $servicie) {
+        Servicie::find($servicie->id)->update($request->validated());
         return response()->json(['msg' => 'Servicie updated successfully', 'Servicie' => $servicie], 201);
     }
 
